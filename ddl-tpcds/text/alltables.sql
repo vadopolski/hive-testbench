@@ -1,4 +1,65 @@
+create database if not exists ${DB};
+use ${DB};
+-- Table<store_sales (23 cols)  partition=ss_sold_date_sk>
 
+drop table if exists store_sales;
+create external table if not exists store_sales(
+      ss_sold_date_sk bigint
+,     ss_sold_time_sk bigint
+,     ss_item_sk bigint
+,     ss_customer_sk bigint
+,     ss_cdemo_sk bigint
+,     ss_hdemo_sk bigint
+,     ss_addr_sk bigint
+,     ss_store_sk bigint
+,     ss_promo_sk bigint
+,     ss_ticket_number bigint
+,     ss_quantity int
+,     ss_wholesale_cost decimal(7,2)
+,     ss_list_price decimal(7,2)
+,     ss_sales_price decimal(7,2)
+,     ss_ext_discount_amt decimal(7,2)
+,     ss_ext_sales_price decimal(7,2)
+,     ss_ext_wholesale_cost decimal(7,2)
+,     ss_ext_list_price decimal(7,2)
+,     ss_ext_tax decimal(7,2)
+,     ss_coupon_amt decimal(7,2)
+,     ss_net_paid decimal(7,2)
+,     ss_net_paid_inc_tax decimal(7,2)
+,     ss_net_profit decimal(7,2)
+)
+row format delimited fields terminated by '|'
+location '${LOCATION}/store_sales'
+;
+
+-- Table<store_returns (20 cols)  partition=sr_returned_date_sk>
+
+drop table if exists store_returns;
+create external table if not exists store_returns(
+      sr_returned_date_sk bigint
+,     sr_return_time_sk bigint
+,     sr_item_sk bigint
+,     sr_customer_sk bigint
+,     sr_cdemo_sk bigint
+,     sr_hdemo_sk bigint
+,     sr_addr_sk bigint
+,     sr_store_sk bigint
+,     sr_reason_sk bigint
+,     sr_ticket_number bigint
+,     sr_return_quantity int
+,     sr_return_amt decimal(7,2)
+,     sr_return_tax decimal(7,2)
+,     sr_return_amt_inc_tax decimal(7,2)
+,     sr_fee decimal(7,2)
+,     sr_return_ship_cost decimal(7,2)
+,     sr_refunded_cash decimal(7,2)
+,     sr_reversed_charge decimal(7,2)
+,     sr_store_credit decimal(7,2)
+,     sr_net_loss decimal(7,2)
+)
+row format delimited fields terminated by '|'
+location '${LOCATION}/store_returns'
+;
 
 -- Table<catalog_sales (34 cols)  partition=cs_sold_date_sk>
 
@@ -39,8 +100,8 @@ create external table if not exists catalog_sales(
 ,     cs_net_paid_inc_ship_tax decimal(7,2)
 ,     cs_net_profit decimal(7,2)
 )
-row format delimited fields terminated by '|' 
-location '/user/vadopolski/20/catalog_sales'
+row format delimited fields terminated by '|'
+location '${LOCATION}/catalog_sales'
 ;
 
 -- Table<catalog_returns (27 cols)  partition=cr_returned_date_sk>
@@ -73,10 +134,10 @@ create external table if not exists catalog_returns(
 ,     cr_refunded_cash decimal(7,2)
 ,     cr_reversed_charge decimal(7,2)
 ,     cr_store_credit decimal(7,2)
-,     cr_net_loss decimal(7,2)  
+,     cr_net_loss decimal(7,2)
 )
-row format delimited fields terminated by '|' 
-location '/user/vadopolski/20/catalog_returns'
+row format delimited fields terminated by '|'
+location '${LOCATION}/catalog_returns'
 ;
 
 -- Table<web_sales (34 cols)  partition=ws_sold_date_sk>
@@ -118,8 +179,8 @@ create external table if not exists web_sales(
 ,     ws_net_paid_inc_ship_tax decimal(7,2)
 ,     ws_net_profit decimal(7,2)
 )
-row format delimited fields terminated by '|' 
-location '/user/vadopolski/20/web_sales'
+row format delimited fields terminated by '|'
+location '${LOCATION}/web_sales'
 ;
 
 -- Table<web_returns (24 cols)  partition=wr_returned_date_sk>
@@ -149,10 +210,10 @@ create external table if not exists web_returns(
 ,     wr_refunded_cash decimal(7,2)
 ,     wr_reversed_charge decimal(7,2)
 ,     wr_account_credit decimal(7,2)
-,     wr_net_loss decimal(7,2) 
+,     wr_net_loss decimal(7,2)
 )
-row format delimited fields terminated by '|' 
-location '/user/vadopolski/20/web_returns'
+row format delimited fields terminated by '|'
+location '${LOCATION}/web_returns'
 ;
 
 -- Table<inventory (4 cols)>
@@ -165,7 +226,7 @@ create external table if not exists inventory(
 ,     inv_quantity_on_hand int
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/inventory';
+location '${LOCATION}/inventory';
 
 -- Table<store (29 cols)>
 
@@ -202,7 +263,7 @@ create external table if not exists store(
 ,     s_tax_percentage decimal(5,2)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/store'
+location '${LOCATION}/store'
 tblproperties ('serialization.null.format'='');
 
 -- Table<call_center (31 cols)>
@@ -242,7 +303,7 @@ create external table if not exists call_center(
 ,     cc_tax_percentage decimal(5,2)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/call_center'
+location '${LOCATION}/call_center'
 tblproperties ('serialization.null.format'='');
 
 -- Table<catalog_page (9 cols)>
@@ -260,7 +321,7 @@ create external table if not exists catalog_page(
 ,     cp_type varchar(100)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/catalog_page'
+location '${LOCATION}/catalog_page'
 tblproperties ('serialization.null.format'='');
 
 -- Table<web_site (26 cols)>
@@ -291,11 +352,11 @@ create external table if not exists web_site(
 ,     web_state char(2)
 ,     web_zip char(10)
 ,     web_country varchar(20)
-,     web_gmt_offset decimal(5,2)  
+,     web_gmt_offset decimal(5,2)
 ,     web_tax_percentage decimal(5,2)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/web_site'
+location '${LOCATION}/web_site'
 tblproperties ('serialization.null.format'='');
 
 -- Table<web_page (14 cols)>
@@ -318,7 +379,7 @@ create external table if not exists web_page(
 ,     wp_max_ad_count int
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/web_page'
+location '${LOCATION}/web_page'
 tblproperties ('serialization.null.format'='');
 
 -- Table<warehouse (14 cols)>
@@ -341,7 +402,7 @@ create external table if not exists warehouse(
 ,     w_gmt_offset decimal(5,2)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/warehouse'
+location '${LOCATION}/warehouse'
 tblproperties ('serialization.null.format'='');
 
 -- Table<customer (18 cols)>
@@ -368,7 +429,7 @@ create external table if not exists customer(
 ,     c_last_review_date_sk bigint
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/customer'
+location '${LOCATION}/customer'
 tblproperties ('serialization.null.format'='');
 
 -- Table<customer_address (13 cols)>
@@ -390,7 +451,7 @@ create external table if not exists customer_address(
 ,     ca_location_type char(20)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/customer_address'
+location '${LOCATION}/customer_address'
 tblproperties ('serialization.null.format'='');
 
 -- Table<customer_demographics (9 cols)>
@@ -408,7 +469,7 @@ create external table if not exists customer_demographics(
 ,     cd_dep_college_count int
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/customer_demographics'
+location '${LOCATION}/customer_demographics'
 tblproperties ('serialization.null.format'='');
 
 -- Table<date_dim (28 cols)>
@@ -445,7 +506,7 @@ create external table if not exists date_dim(
 ,     d_current_year char(1)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/date_dim'
+location '${LOCATION}/date_dim'
 tblproperties ('serialization.null.format'='');
 
 -- Table<household_demographics (5 cols)>
@@ -459,7 +520,7 @@ create external table if not exists household_demographics(
 ,     hd_vehicle_count int
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/household_demographics'
+location '${LOCATION}/household_demographics'
 tblproperties ('serialization.null.format'='');
 
 -- Table<item (22 cols)>
@@ -490,7 +551,7 @@ create external table if not exists item(
 ,     i_product_name char(50)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/item'
+location '${LOCATION}/item'
 tblproperties ('serialization.null.format'='');
 
 -- Table<income_band (3 cols)>
@@ -502,7 +563,7 @@ create external table if not exists income_band(
 ,     ib_upper_bound int
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/income_band';
+location '${LOCATION}/income_band';
 
 -- Table<promotion (19 cols)>
 
@@ -529,7 +590,7 @@ create external table if not exists promotion(
 ,     p_discount_active char(1)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/promotion'
+location '${LOCATION}/promotion'
 tblproperties ('serialization.null.format'='');
 
 -- Table<reason (3 cols)>
@@ -541,7 +602,7 @@ create external table if not exists reason(
 ,     r_reason_desc char(100)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/reason'
+location '${LOCATION}/reason'
 tblproperties ('serialization.null.format'='');
 
 -- Table<ship_mode (6 cols)>
@@ -556,7 +617,7 @@ create external table if not exists ship_mode(
 ,     sm_contract char(20)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/ship_mode'
+location '${LOCATION}/ship_mode'
 tblproperties ('serialization.null.format'='');
 
 -- Table<time_dim (10 cols)>
@@ -575,7 +636,5 @@ create external table if not exists time_dim(
 ,     t_meal_time char(20)
 )
 row format delimited fields terminated by '|'
-location '/user/vadopolski/20/time_dim'
+location '${LOCATION}/time_dim'
 tblproperties ('serialization.null.format'='');
-
-
